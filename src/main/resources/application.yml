@@ -1,22 +1,52 @@
 server:
-  port: 8011
+  port: 8010
 
 spring:
-  profiles:
-    active: dev
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
-  application:
-    name: photo
+  # redis配置
+  redis:
+    # Redis数据库索引
+    database: 3
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: 123456
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 10000
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
 
+  application:
+    name: zjzYun
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/zjzwx?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: 123456
+    #如果你的密码是纯数字，需要用字符串包起来，只有纯数字需要这样
+    password: "123456"
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     auto-mapping-behavior: FULL
+
+
+
+
 
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
@@ -47,6 +77,23 @@ sa-token:
   isWriteHeader: false
 
 
+
+#系统配置
+webset:
+  #图片路径
+  directory: /www/wwwroot/zjzpic/pic
+  #图片存储服务器域名
+  picDomain: https://pic.0po.cn/
+  #鉴黄API地址
+  safetyDomain: http://127.0.0.1:3006/
+  #证件照APi地址
+  zjzDomain: http://127.0.0.1:8080/
+  #黑白图片上色APi地址
+  colourizeDomain: http://127.0.0.1/
+  #二维码：正式版为：release，体验版为：trial，开发版为：develop
+  envVersion: release
+
+
 #模型配置
 modelset:
 
@@ -60,3 +107,8 @@ modelset:
   humanMattingModel: hivision_modnet
   #人脸检测模型 - 可选值：mtcnn | retinaface-resnet50
   faceDetectModel: mtcnn
+  #智能抠图模型 - 可选值：modnet_photographic_portrait_matting | hivision_modnet | rmbg-1.4 | birefnet-v1-lite
+  mattingModel: birefnet-v1-lite
+  #智能抠图模型说明：
+  #birefnet-v1-lite的效果最好，也最慢，占用内存最大
+  #如果你自已部署了API但是服务器带不动，请更换官方的智能抠图API地址 或 更换智能抠图模型
