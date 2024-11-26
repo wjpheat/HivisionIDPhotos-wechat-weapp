@@ -1,10 +1,12 @@
 package org.zjzWx.config;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SaTokenConfigure {
+
+
 
     /**
      * 注册 [Sa-Token全局过滤器]
@@ -28,7 +32,8 @@ public class SaTokenConfigure {
                 .setAuth(obj -> {
                     System.out.println("---------- 进入Sa-Token全局认证 -----------");
                     // 登录认证 -- 拦截所有路由,特别url放行
-                    SaRouter.match("/**").notMatch("/user/login","/item/itemList","/admin/login","/admin/checkLogin","/admin/okLogin","/otherApi/exploreCount").check(r -> StpUtil.checkLogin());
+                    SaRouter.match("/**").notMatch("/user/login","/item/itemList","/admin/login"
+                            ,"/admin/checkLogin","/admin/okLogin","/otherApi/exploreCount").check(r -> StpUtil.checkLogin());
 
                     // 更多拦截处理方式，请参考“路由拦截式鉴权”章节 */
                 })
@@ -46,7 +51,7 @@ public class SaTokenConfigure {
                     // ---------- 设置一些安全响应头 ----------
                     SaHolder.getResponse()
                     // 服务器名称
-                    .setServer("zjzWx")
+                    .setServer("photo")
                     // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
                     .setHeader("X-Frame-Options", "DENY")
                     // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
